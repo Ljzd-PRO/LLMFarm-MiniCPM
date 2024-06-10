@@ -23,7 +23,7 @@ jobs:
           xcodebuild -project LLMFarm.xcodeproj \
             -scheme LLMFarm_Release clean archive -configuration ${{ matrix.configuration }} \
             -archivePath LLMFarm.xcarchive \
-            - allowProvisioningUpdates
+            -allowProvisioningUpdates
 
       - name: XCarchive to ipa
         run: |
