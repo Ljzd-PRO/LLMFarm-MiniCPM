@@ -28,7 +28,7 @@ jobs:
             -project LLMFarm.xcodeproj \
             -scheme LLMFarm_Release clean archive -configuration ${{ matrix.configuration }} \
             -archivePath LLMFarm.xcarchive \
-            -sdk iphoneos16.1 \
+            -sdk iphoneos \
             generic/platform=iOS \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
