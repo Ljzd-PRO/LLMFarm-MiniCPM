@@ -10,7 +10,7 @@ jobs:
   build:
     strategy:
       matrix:
-        configuration: [ release, debug ]
+        configuration: [ Release, Debug ]
     runs-on: macos-latest
 
     steps:
@@ -20,10 +20,13 @@ jobs:
 
       - name: Build
         run: |
-          xcodebuild -project LLMFarm.xcodeproj \
+          xcodebuild clean build \
+            -project LLMFarm.xcodeproj \
             -scheme LLMFarm_Release clean archive -configuration ${{ matrix.configuration }} \
             -archivePath LLMFarm.xcarchive \
-            -allowProvisioningUpdates
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_IDENTITY=""
 
       - name: XCarchive to ipa
         run: |
