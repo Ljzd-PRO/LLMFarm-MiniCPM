@@ -4,13 +4,46 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+    inputs:
+      ios-build-runner:
+        description: 'Workflow runner for iOS build'
+        required: true
+        default: 'macos-12'
+        type: choice
+        options:
+          - macos-11
+          - macos-12
+          - macos-13
+          - macos-14
+          - macos-latest
+      macos-build-runner:
+        description: 'Workflow runner for macOS build'
+        required: true
+        default: 'macos-12'
+        type: choice
+        options:
+          - macos-11
+          - macos-12
+          - macos-13
+          - macos-14
+          - macos-latest
+      ios-build-xcode-version:
+        description: 'Xcode version for iOS build'
+        required: true
+        default: '14.1' # With iOS 16 SDK
+        type: string
+      macos-build-xcode-version:
+        description: 'Xcode version for macOS build'
+        required: true
+        default: '14.1' # With macOS 13 SDK
+        type: string
 
 jobs:
   build-for-ios:
     strategy:
       matrix:
         configuration: [ Release, Debug ]
-    runs-on: macos-12
+    runs-on: ${{ inputs.ios-build-runner }}
 
     steps:
       - uses: actions/checkout@v4
@@ -20,7 +53,7 @@ jobs:
       - uses: maxim-lobanov/setup-xcode@v1
         name: Setup Xcode
         with:
-          xcode-version: '14.0' # With iOS 16 SDK
+          xcode-version: ${{ inputs.ios-build-xcode-version }}
 
       - name: Build for iOS
         run: |
@@ -51,7 +84,7 @@ jobs:
     strategy:
       matrix:
         configuration: [ Release, Debug ]
-    runs-on: macos-12
+    runs-on: ${{ inputs.macos-build-runner }}
 
     steps:
       - uses: actions/checkout@v4
@@ -61,7 +94,7 @@ jobs:
       - uses: maxim-lobanov/setup-xcode@v1
         name: Setup Xcode
         with:
-          xcode-version: '14.1' # With macOS 13 SDK
+          xcode-version: ${{ inputs.ios-build-xcode-version }}
 
       - name: Build
         run: |
