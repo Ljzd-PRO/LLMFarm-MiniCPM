@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-for-ios:
     strategy:
       matrix:
         configuration: [ Release, Debug ]
@@ -40,14 +40,40 @@ jobs:
           cp -a LLMFarm.xcarchive/Products/Applications/* Payload
           zip -rmq "LLMFarm-${{ matrix.configuration }}.ipa" Payload
 
-      - name: Build for macOS
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: iOS-${{ matrix.configuration }}
+          path: |
+            LLMFarm-${{ matrix.configuration }}.ipa
+
+  build-for-macos:
+    strategy:
+      matrix:
+        configuration: [ Release, Debug ]
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        name: Setup Xcode
+        with:
+          xcode-version: latest-stable
+
+      # error: could not find module 'llmfarm_core' for target 'x86_64-apple-macos'; found: arm64-apple-macos
+      - name: Build
         run: |
           xcodebuild clean build \
             -project LLMFarm.xcodeproj \
             -scheme LLMFarm_Release clean archive -configuration ${{ matrix.configuration }} \
             -archivePath LLMFarm.xcarchive \
             -sdk macosx \
+            -arch arm64 \
             generic/platform=macOS \
+            ONLY_ACTIVE_ARCH=NO \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_IDENTITY=""
@@ -55,7 +81,6 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.configuration }}
+          name: macOS-${{ matrix.configuration }}
           path: |
-            LLMFarm-${{ matrix.configuration }}.ipa
             LLMFarm.xcarchive/Products/Applications
