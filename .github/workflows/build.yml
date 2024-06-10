@@ -1,4 +1,4 @@
-name: Build For iOS
+name: Xcode Build
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
         with:
           xcode-version: latest-stable
 
-      - name: Build
+      - name: Build for iOS
         run: |
           xcodebuild clean build \
             -project LLMFarm.xcodeproj \
@@ -40,7 +40,22 @@ jobs:
           cp -a LLMFarm.xcarchive/Products/Applications/* Payload
           zip -rmq "LLMFarm-${{ matrix.configuration }}.ipa" Payload
 
+      - name: Build for macOS
+        run: |
+          xcodebuild clean build \
+            -project LLMFarm.xcodeproj \
+            -scheme LLMFarm_Release clean archive -configuration ${{ matrix.configuration }} \
+            -archivePath LLMFarm.xcarchive \
+            -sdk macosx \
+            generic/platform=macOS \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_IDENTITY=""
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          path: LLMFarm-${{ matrix.configuration }}.ipa
+          name: ${{ matrix.configuration }}
+          path: |
+            LLMFarm-${{ matrix.configuration }}.ipa
+            LLMFarm.xcarchive/Products/Applications
