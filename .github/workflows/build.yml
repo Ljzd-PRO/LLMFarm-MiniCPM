@@ -8,6 +8,9 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        configuration: [ release, debug ]
     runs-on: macos-latest
 
     steps:
@@ -15,19 +18,19 @@ jobs:
         with:
           submodules: true
 
-      - name: chmod +x
-        run: |
-          chmod +x Compile-to-ipa-without-developer-account/project_build.sh
-          chmod +x Compile-to-ipa-without-developer-account/workspace_build.sh
-          chmod +x Compile-to-ipa-without-developer-account/xcarchive_to_ipa.sh
-          
       - name: Build
         run: |
-          cd Compile-to-ipa-without-developer-account
-          ./project_build.sh .. LLMFarm
-          cd ..
+          xcodebuild -project LLMFarm.xcodeproj \
+            -scheme LLMFarm clean archive -configuration ${{ matrix.configuration }} \
+            -archivePath LLMFarm.xcarchive
+
+      - name: XCarchive to ipa
+        run: |
+          mkdir Payload
+          cp -a LLMFarm.xcarchive/Products/Applications/* Payload
+          zip -rmq "LLMFarm-${{ matrix.configuration }}.ipa" Payload
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          path: ./*.ipa
+          path: LLMFarm-${{ matrix.configuration }}.ipa
