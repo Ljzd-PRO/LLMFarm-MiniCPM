@@ -21,7 +21,7 @@ jobs:
       - name: Build
         run: |
           xcodebuild -project LLMFarm.xcodeproj \
-            -scheme LLMFarm clean archive -configuration ${{ matrix.configuration }} \
+            -scheme LLMFarm_Release clean archive -configuration ${{ matrix.configuration }} \
             -archivePath LLMFarm.xcarchive
 
       - name: XCarchive to ipa
