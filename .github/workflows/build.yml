@@ -28,6 +28,8 @@ jobs:
             -project LLMFarm.xcodeproj \
             -scheme LLMFarm_Release clean archive -configuration ${{ matrix.configuration }} \
             -archivePath LLMFarm.xcarchive \
+            -sdk iphoneos \
+            generic/platform=iOS \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_IDENTITY=""
