@@ -29,7 +29,6 @@ jobs:
             -scheme LLMFarm_Release clean archive -configuration ${{ matrix.configuration }} \
             -archivePath LLMFarm.xcarchive \
             -sdk iphoneos \
-            generic/platform=iOS \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_IDENTITY=""
@@ -63,7 +62,6 @@ jobs:
         with:
           xcode-version: latest-stable
 
-      # error: could not find module 'llmfarm_core' for target 'x86_64-apple-macos'; found: arm64-apple-macos
       - name: Build
         run: |
           xcodebuild clean build \
@@ -74,7 +72,6 @@ jobs:
             -sdk macosx \
             -arch x86_64 \
             -arch arm64 \
-            generic/platform=macOS \
             ONLY_ACTIVE_ARCH=NO \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
