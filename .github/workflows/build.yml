@@ -71,7 +71,7 @@ jobs:
             -scheme LLMFarm_Release clean archive -configuration ${{ matrix.configuration }} \
             -archivePath LLMFarm.xcarchive \
             -sdk macosx \
-            -arch arm64 \
+            -arch arm64,arm64e \
             generic/platform=macOS \
             ONLY_ACTIVE_ARCH=NO \
             CODE_SIGNING_ALLOWED=NO \
