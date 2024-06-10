@@ -51,7 +51,6 @@ jobs:
     strategy:
       matrix:
         configuration: [ Release, Debug ]
-        arch: [ arm64, arm64e, x86_64 ]
     runs-on: macos-latest
 
     steps:
@@ -72,7 +71,9 @@ jobs:
             -configuration ${{ matrix.configuration }} \
             -archivePath LLMFarm.xcarchive \
             -sdk macosx \
-            -arch ${{ matrix.arch }} \
+            -arch x86_64 \
+            -arch arm64 \
+            -arch arm64e \
             generic/platform=macOS \
             ONLY_ACTIVE_ARCH=NO \
             CODE_SIGNING_ALLOWED=NO \
@@ -82,6 +83,6 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: macOS-${{ matrix.configuration }}-${{ matrix.arch }}
+          name: macOS-${{ matrix.configuration }}
           path: |
             LLMFarm.xcarchive/Products/Applications
