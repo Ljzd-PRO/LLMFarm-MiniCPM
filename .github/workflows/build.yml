@@ -1,0 +1,33 @@
+name: Build For iOS
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: chmod +x
+        run: |
+          chmod +x Compile-to-ipa-without-developer-account/project_build.sh
+          chmod +x Compile-to-ipa-without-developer-account/workspace_build.sh
+          chmod +x Compile-to-ipa-without-developer-account/xcarchive_to_ipa.sh
+          
+      - name: Build
+        run: |
+          cd Compile-to-ipa-without-developer-account
+          ./project_build.sh .. LLMFarm
+          cd ..
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./*.ipa
