@@ -20,7 +20,7 @@ jobs:
       - uses: maxim-lobanov/setup-xcode@v1
         name: Setup Xcode
         with:
-          xcode-version: latest-stable
+          xcode-version: '14.0' # With iOS 16 SDK
 
       - name: Build for iOS
         run: |
@@ -62,9 +62,8 @@ jobs:
       - uses: maxim-lobanov/setup-xcode@v1
         name: Setup Xcode
         with:
-          xcode-version: latest-stable
+          xcode-version: '14.1' # With macOS 13 SDK
 
-      # error: could not find module 'llmfarm_core' for target 'x86_64-apple-macos'; found: arm64-apple-macos
       - name: Build
         run: |
           xcodebuild clean build \
